@@ -177,6 +177,12 @@
         const managerEmail = "manager@example.com"; // Simulate manager access
         let customers = JSON.parse(localStorage.getItem("customers")) || [];
 
+        function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.textContent = text ?? "";
+            return div.innerHTML;
+        }
+
         // Tab Navigation
         function showTab(tabId) {
             document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
@@ -228,13 +234,13 @@
             // Display grouped tasks
             Object.keys(groupedTasks).sort().forEach(rep => {
                 const repTasks = groupedTasks[rep].sort((a, b) => a.lastName.localeCompare(b.lastName));
-                let taskHTML = `<div class="task-group"><h3>${rep}'s Tasks</h3>`;
+                let taskHTML = `<div class="task-group"><h3>${escapeHtml(rep)}'s Tasks</h3>`;
                 repTasks.forEach((task, i) => {
                     taskHTML += `
                         <div class="task-item">
-                            <strong>${i + 1}. ${task.firstName} & ${task.lastName}</strong> – ${task.phone}<br>
-                            Volume: $${task.volume.toLocaleString()} | TO: ${task.to}<br>
-                            Notes: ${task.notes || "None"}
+                            <strong>${i + 1}. ${escapeHtml(task.firstName)} & ${escapeHtml(task.lastName)}</strong> – ${escapeHtml(task.phone)}<br>
+                            Volume: $${task.volume.toLocaleString()} | TO: ${escapeHtml(task.to)}<br>
+                            Notes: ${escapeHtml(task.notes || "None")}
                         </div>`;
                 });
                 taskHTML += `</div>`;
@@ -266,7 +272,7 @@
                 .forEach((sale, i) => {
                     salesList.innerHTML += `
                         <div class="sales-item">
-                            ${i + 1}. ${sale.lastName}, ${sale.firstName} – $${sale.volume.toLocaleString()} – ${sale.saleDate} (Rep: ${sale.salesRep})
+                            ${i + 1}. ${escapeHtml(sale.lastName)}, ${escapeHtml(sale.firstName)} – $${sale.volume.toLocaleString()} – ${escapeHtml(sale.saleDate)} (Rep: ${escapeHtml(sale.salesRep)})
                         </div>`;
                 });
         }
